@@ -1,0 +1,19 @@
+# this file is cribbed from https://github.com/phusion/passenger_apt_automation/debian_specs/nginx/rules
+
+BASEDIR = $(CURDIR)
+MODULESDIR = $(CURDIR)/modules
+MODULESPATCHDIR = $(CURDIR)/modules/patches
+modules_with_patches := $(notdir $(wildcard $(CURDIR)/modules/patches/*))
+
+config_patch_modules: $(foreach mod,$(modules_with_patches),config.patch.$(mod))
+config.patch.%:
+	cd $(MODULESDIR)/$* && QUILT_PATCHES=$(MODULESPATCHDIR)/$* quilt push -a
+
+clean_patch_modules: $(foreach mod,$(modules_with_patches),clean.patch.$(mod))
+clean.patch.%:
+	if [ -s $(MODULESDIR)/$*/.pc/applied-patches ]; then \
+		cd $(MODULESDIR)/$* && QUILT_PATCHES=$(MODULESPATCHDIR)/$* quilt pop -q -a; \
+		rm -rf $(MODULESDIR)/$*/.pc; \
+	fi
+
+.PHONY: config_patch_modules clean_patch_modules
