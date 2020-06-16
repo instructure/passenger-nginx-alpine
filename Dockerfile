@@ -1,5 +1,6 @@
 ARG RUBY=2.6
-FROM ruby:${RUBY}-alpine
+ARG ALPINE=3.11
+FROM ruby:${RUBY}-alpine${ALPINE}
 LABEL maintainer="Instructure"
 
 ARG ALPINE_MIRROR
