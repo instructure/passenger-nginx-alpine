@@ -20,7 +20,6 @@ ENV NGINX_MODULES_PATH=${PASSENGER_NGINX_APT_SRC_PATH}/modules
 # this file is cribbed from
 # https://github.com/phusion/passenger_apt_automation/debian_specs/nginx/rules
 COPY rules ${PASSENGER_NGINX_APT_SRC_PATH}/
-COPY entrypoint.sh ${SRC_PATH}/entrypoint.sh
 
 RUN set -eux; \
   \
@@ -125,7 +124,6 @@ RUN set -eux; \
   && cd - \
   && apk del --no-network .quilt .nginxBuildDeps .buildDeps \
   # ref: https://github.com/instructure/dockerfiles/blob/master/ruby-passenger/2.6/Dockerfile \
-  && chmod +x ${SRC_PATH}/entrypoint.sh \
   && mkdir -p ${SRC_PATH}/nginx/conf.d \
   && mkdir -p ${SRC_PATH}/nginx/location.d \
   && mkdir -p ${SRC_PATH}/nginx/main.d \
@@ -137,11 +135,12 @@ RUN set -eux; \
   && rm -rf $PASSENGER_NGINX_APT_SRC_PATH \
   && rm -rf /tmp/*
 
-COPY nginx.conf.erb ${SRC_PATH}/nginx/nginx.conf.erb
+COPY entrypoint ${SRC_PATH}/entrypoint
 COPY main.d/* ${SRC_PATH}/nginx/main.d/
+COPY nginx.conf.erb ${SRC_PATH}/nginx/nginx.conf.erb
 
 USER docker
 
 EXPOSE 80
 
-CMD ["/usr/src/entrypoint.sh"]
+CMD ["/usr/src/entrypoint"]
