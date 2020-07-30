@@ -6,7 +6,7 @@ LABEL maintainer="Instructure"
 ARG ALPINE_MIRROR
 ENV ALPINE_MIRROR ${ALPINE_MIRROR:-http://dl-cdn.alpinelinux.org/alpine/}
 
-ARG PASSENGER=6.0.5
+ARG PASSENGER=6.0.4
 # at the time of authoring this, master was 2f444c6 for these files
 ARG PASSENGER_APT_AUTOMATION_SHA=2f444c6
 
